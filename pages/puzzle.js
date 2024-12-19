@@ -19,25 +19,27 @@ export default function PuzzlePage() {
   }, [state.puzzle1.completed, state.puzzle2.completed]);
 
   return (
-    <Layout title="Solve the Puzzles">
-      <div className="space-y-8">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Solve the Puzzles 🧩
-        </h1>
+    <Layout>
+      <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4">
+        <div className="max-w-4xl w-full space-y-8">
+          <h1 className="text-4xl font-bold text-center mb-8">
+            Solve the Puzzles 🧩
+          </h1>
 
-        <PuzzleSection puzzleNumber={1} />
-        
-        {state.puzzle1.completed && (
-          <PuzzleSection puzzleNumber={2} />
-        )}
+          <PuzzleSection puzzleNumber={1} />
+          
+          {state.puzzle1.completed && (
+            <PuzzleSection puzzleNumber={2} />
+          )}
 
-        <div className="flex justify-center mt-6">
-          <Button
-            onClick={() => router.push('/')}
-            variant="secondary"
-          >
-            Back to Home
-          </Button>
+          <div className="flex justify-center mt-8">
+            <Button 
+              onClick={() => router.push('/')}
+              variant="secondary"
+            >
+              Back to Home
+            </Button>
+          </div>
         </div>
       </div>
     </Layout>
