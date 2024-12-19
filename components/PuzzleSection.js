@@ -122,16 +122,27 @@ const handleAnswerSubmit = (selectedAnswer) => {
 };
 
     
-    if (puzzleState.completed) {
-        return (
-            <div className="bg-green-100 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-green-800">
-                    Puzzle {puzzleNumber} Completed! 🎉
-                </h3>
-                <p className="mt-2">Your digits: {puzzleState.digits.join('')}</p>
-            </div>
-        );
-    }
+if (puzzleState.completed) {
+    return (
+        <div className="bg-green-100 p-6 rounded-lg transform transition-all duration-500 ease-in-out hover:scale-105">
+            <h3 className="text-xl font-semibold text-green-800 flex items-center">
+                Puzzle {puzzleNumber} Completed! 
+                <span className="ml-2 animate-bounce">🎉</span>
+            </h3>
+            <p className="mt-2 text-green-700">Your digits: 
+                <span className="font-bold text-xl ml-2">
+                    {puzzleState.digits.join('')}
+                </span>
+            </p>
+            {puzzleNumber === 1 && (
+                <p className="mt-4 text-sm text-green-600">
+                    Great job! Now proceed to Puzzle 2 to complete the challenge.
+                </p>
+            )}
+        </div>
+    );
+}
+
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
