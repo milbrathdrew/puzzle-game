@@ -7,17 +7,14 @@ import Layout from '../components/Layout';
 export default function PuzzlePage() {
     const { state, dispatch } = useGameState();
     
-    // Debug logging
     console.log('Current Game State:', state);
     
-    const allPuzzlesCompleted = state.puzzle1?.completed && state.puzzle2?.completed;
-
-    const handlePuzzleComplete = (score) => {
-        console.log(`Puzzle completed with score: ${score}`);
+    const handleWordPuzzleComplete = (score) => {
+        console.log(`Word Puzzle completed with score: ${score}`);
         dispatch({
             type: 'COMPLETE_PUZZLE',
             payload: {
-                puzzleNumber: 1,
+                puzzleNumber: 'wordPuzzle',
                 score: score
             }
         });
@@ -26,36 +23,23 @@ export default function PuzzlePage() {
     return (
         <Layout>
             <div className="container mx-auto px-4 py-8">
-                {/* Debug Display */}
+                {/* Debug State Display */}
                 <div className="bg-gray-100 p-4 mb-4 rounded">
-                    <p className="text-sm font-mono">Debug State:</p>
                     <pre className="text-xs">
                         {JSON.stringify(state, null, 2)}
                     </pre>
                 </div>
 
-                {!allPuzzlesCompleted && (
-                    <>
-                        <PuzzleSection puzzleNumber={1}>
-                            <WordFragmentation 
-                                onComplete={handlePuzzleComplete}
-                                puzzleNumber={1}
-                            />
-                        </PuzzleSection>
+                {/* Word Fragmentation Puzzle */}
+                <div className="mb-8">
+                    <WordFragmentation 
+                        word="FRAGMENTATION"
+                        onComplete={handleWordPuzzleComplete}
+                    />
+                </div>
 
-                        {state.puzzle1?.completed && (
-                            <PuzzleSection puzzleNumber={2}>
-                                <WordFragmentation 
-                                    onComplete={(score) => handlePuzzleComplete(score)}
-                                    puzzleNumber={2}
-                                />
-                            </PuzzleSection>
-                        )}
-                    </>
-                )}
-                
-                {allPuzzlesCompleted && (
-                    <div className="flex justify-center items-center min-h-[50vh]">
+                {state.wordPuzzle?.completed && (
+                    <div className="flex justify-center items-center">
                         <div className="bg-green-100 p-8 rounded-lg shadow-xl">
                             <div className="text-center">
                                 <h2 className="text-2xl font-bold text-green-800 mb-4">

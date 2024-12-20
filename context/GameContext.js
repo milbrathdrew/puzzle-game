@@ -12,15 +12,23 @@ const initialState = {
     puzzle2: {
         completed: false,
         score: 0
+    },
+    wordPuzzle: {
+        completed: false,
+        score: 0
     }
 };
 
 function gameReducer(state, action) {
     switch (action.type) {
         case 'COMPLETE_PUZZLE':
+            const puzzleKey = action.payload.puzzleNumber === 'wordPuzzle' 
+                ? 'wordPuzzle' 
+                : `puzzle${action.payload.puzzleNumber}`;
+            
             return {
                 ...state,
-                [`puzzle${action.payload.puzzleNumber}`]: {
+                [puzzleKey]: {
                     completed: true,
                     score: action.payload.score
                 }
@@ -31,6 +39,7 @@ function gameReducer(state, action) {
             return state;
     }
 }
+
 
 export function GameProvider({ children }) {
     const [state, dispatch] = useReducer(gameReducer, initialState);
