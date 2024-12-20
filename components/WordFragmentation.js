@@ -51,23 +51,42 @@ const WordFragmentation = ({ word = "FRAGMENTATION", letters, onComplete, comple
         }
     }, [completed, word, letters]);
 
-    // Background music effect
-    useEffect(() => {
-        const bgMusic = backgroundMusicRef.current;
-        if (bgMusic) {
-            bgMusic.volume = 0.3;
+// Add a new ref to track if audio has been initialized
+const audioInitializedRef = useRef(false);
+
+// Modify your background music useEffect
+useEffect(() => {
+    const bgMusic = backgroundMusicRef.current;
+    
+    // Only initialize audio once
+    if (bgMusic && !audioInitializedRef.current) {
+        audioInitializedRef.current = true;
+        bgMusic.volume = 0.3;
+        
+        // Add event listener for when the audio can play
+        const playAudio = () => {
             bgMusic.play().catch(error => {
                 console.error("Background music playback failed:", error);
             });
-        }
-
-        return () => {
-            if (bgMusic) {
-                bgMusic.pause();
-                bgMusic.currentTime = 0;
-            }
         };
-    }, []);
+
+        // Check if the document is ready for audio playback
+        if (document.readyState === 'complete') {
+            playAudio();
+        } else {
+            window.addEventListener('load', playAudio);
+        }
+    }
+
+    return () => {
+        if (bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+            audioInitializedRef.current = false;
+        }
+        window.removeEventListener('load', playAudio);
+    };
+}, []); // Empty dependency array
 
     const handleDragOver = (e) => {
         e.preventDefault();
