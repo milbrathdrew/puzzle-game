@@ -14,32 +14,38 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-4xl font-bold text-center mb-8">
-            Welcome to the Puzzle Challenge! 🧩
-          </h1>
+      <div className="min-h-screen bg-gradient-to-b from-[#c41e3a] to-[#1a5152]">
+        <main className="container mx-auto px-4 py-8">
+          <div className="rounded-lg p-6 bg-white/10 backdrop-blur-sm max-w-2xl mx-auto">
+            <h1 className="text-3xl font-bold mb-6 text-[#ffd700] flex items-center justify-center">
+              <span className="mr-2">🎄</span>
+              Welcome to Ashley's Christmas Challenge!
+            </h1>
 
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">
-              How to Play:
-            </h2>
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                <span className="mr-2">🎁</span>
+                How to Play:
+              </h2>
 
-            <ul className="list-disc pl-6 space-y-2">
-              <li>You'll face two puzzles with four clues each</li>
-              <li>Solve all clues in Puzzle 1 to unlock Puzzle 2</li>
-              <li>Each puzzle will generate two digits</li>
-              <li>Combine all digits to crack the final four-digit code</li>
-            </ul>
+              <ul className="text-white space-y-3 list-inside list-disc">
+                <li>Answer all Puzzle 1 Questions to Unlock Puzzle 2</li>
+                <li>Answer all Puzzle 2 Questions to Unlock Puzzle 3</li>
+                <li>Answer all Puzzle 3 Questions correctly to unlock your big gift</li>
+                <li>Use the generated codes to solve the riddle unlocking your small gift</li>
+              </ul>
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={startGame}
+                className="px-6 py-3 bg-[#c41e3a] text-white rounded-lg hover:bg-[#a01830] transition-colors text-lg font-bold"
+              >
+                Start Puzzle Challenge 🎅
+              </button>
+            </div>
           </div>
-
-          <button
-            onClick={startGame}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
-          >
-            Start Puzzle Challenge 🎮
-          </button>
-        </div>
+        </main>
       </div>
     </Layout>
   );
