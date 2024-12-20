@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-b from-[#c41e3a] to-[#1a5151]">
+      <div className="min-h-screen bg-gradient-to-b from-[#c41e3a] to-[#1a5152]">
         <main className="container mx-auto px-4 py-8">
           <div className="rounded-lg p-6 bg-white/10 backdrop-blur-sm max-w-2xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-[#ffd700] flex items-center justify-center">
