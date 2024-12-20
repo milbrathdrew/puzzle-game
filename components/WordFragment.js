@@ -1,20 +1,21 @@
 // components/WordFragment.js
 import React from 'react';
 
-const WordFragment = ({ id, letter }) => {
+const WordFragment = ({ fragment }) => {
     const handleDragStart = (e) => {
-        e.dataTransfer.setData('fragmentId', id.toString());
+        e.dataTransfer.setData('fragmentId', fragment.id.toString());
     };
 
     return (
         <div
             draggable
             onDragStart={handleDragStart}
-            className="w-10 h-10 bg-blue-500 text-white rounded flex items-center justify-center font-bold cursor-move hover:bg-blue-600 transition-colors"
+            className="w-12 h-12 border-2 border-gray-400 rounded-md flex items-center justify-center cursor-move bg-white hover:border-blue-500"
         >
-            {letter}
+            <span className="text-xl font-bold">{fragment.letter}</span>
         </div>
     );
 };
 
 export default WordFragment;
+
