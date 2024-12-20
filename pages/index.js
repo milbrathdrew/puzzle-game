@@ -28,7 +28,6 @@ export default function Home() {
             <li>Solve all clues in Puzzle 1 to unlock Puzzle 2</li>
             <li>Each puzzle will generate two digits</li>
             <li>Combine all digits to crack the final four-digit code</li>
-            <li>You get hints after three incorrect attempts</li>
           </ul>
         </div>
 

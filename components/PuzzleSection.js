@@ -86,64 +86,76 @@ export default function PuzzleSection({ puzzleNumber }) {
     const puzzleState = state[`puzzle${puzzleNumber}`];
     const currentQuestion = currentPuzzle.questions[currentQuestionIndex];
 
-const handleAnswerSubmit = (selectedAnswer) => {
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-        const newAnswers = [...answers, selectedAnswer];
-        setAnswers(newAnswers);
+    const handleAnswerSubmit = (selectedAnswer) => {
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            const newAnswers = [...answers, selectedAnswer];
+            setAnswers(newAnswers);
 
-        if (currentQuestionIndex < currentPuzzle.questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setShowHint(false);
+            if (currentQuestionIndex < currentPuzzle.questions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+                setShowHint(false);
+            } else {
+                console.log('Puzzle completed!');
+                console.log('Puzzle number:', puzzleNumber);
+                console.log('Final digits:', currentPuzzle.finalDigits);
+
+                // Updated dispatch to match reducer case
+
+                dispatch({
+                    type: 'COMPLETE_PUZZLE',
+                    payload: {
+                        puzzleNumber: puzzleNumber,
+                        digits: currentPuzzle.finalDigits
+                    }
+                });
+
+                // Add debug log after dispatch
+                console.log('State after dispatch:', state);
+
+                setCurrentQuestionIndex(0);
+                setAnswers([]);
+                setShowHint(false);
+            }
         } else {
-            console.log('Puzzle completed!');
-            console.log('Puzzle number:', puzzleNumber);
-            console.log('Final digits:', currentPuzzle.finalDigits);
-            
-            // Updated dispatch to match reducer case
-            
-            dispatch({
-                type: 'COMPLETE_PUZZLE',
-                payload: {
-                    puzzleNumber: puzzleNumber,
-                    digits: currentPuzzle.finalDigits
-                }
-            });
-
-            // Add debug log after dispatch
-            console.log('State after dispatch:', state);
-            
-            setCurrentQuestionIndex(0);
-            setAnswers([]);
-            setShowHint(false);
+            alert('Incorrect answer. Try again!');
         }
-    } else {
-        alert('Incorrect answer. Try again!');
+    };
+
+
+    if (puzzleState.completed) {
+        const otherPuzzleCompleted = state[`puzzle${puzzleNumber === 1 ? 2 : 1}`].completed;
+
+        if (otherPuzzleCompleted) {
+            const code = [...state.puzzle1.digits, ...state.puzzle2.digits].join('');
+            return (
+                <div className="space-y-4 p-6 bg-emerald-50 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
+                    <h2 className="text-2xl font-bold text-emerald-700 animate-fade-in">
+                        Nice job, here are your answers! 🎉
+                    </h2>
+                    <div className="text-emerald-600">
+                        <p className="text-4xl font-bold animate-bounce-in hover:scale-110 transition-transform duration-300 inline-block">
+                            {code}
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="space-y-4 p-6 bg-card rounded-lg shadow-lg">
+                <h2 className="text-2xl font-bold text-foreground animate-fade-in">
+                    Puzzle {puzzleNumber} Completed! 🎉
+                </h2>
+                {puzzleNumber === 1 && (
+                    <p className="text-muted-foreground animate-slide-in">
+                        Now proceed to Puzzle 2 to complete the challenge.
+                    </p>
+                )}
+            </div>
+        );
     }
-};
 
-    
-if (puzzleState.completed) {
-    return (
-        <div className="bg-green-100 p-6 rounded-lg transform transition-all duration-500 ease-in-out hover:scale-105">
-            <h3 className="text-xl font-semibold text-green-800 flex items-center">
-                Puzzle {puzzleNumber} Completed! 
-                <span className="ml-2 animate-bounce">🎉</span>
-            </h3>
-            <p className="mt-2 text-green-700">Your digits: 
-                <span className="font-bold text-xl ml-2">
-                    {puzzleState.digits.join('')}
-                </span>
-            </p>
-            {puzzleNumber === 1 && (
-                <p className="mt-4 text-sm text-green-600">
-                    Great job! Now proceed to Puzzle 2 to complete the challenge.
-                </p>
-            )}
-        </div>
-    );
-}
-
-
+    // Return the main puzzle UI if not completed
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4">{currentPuzzle.title}</h2>
@@ -190,4 +202,4 @@ if (puzzleState.completed) {
             </div>
         </div>
     );
-}
+};
