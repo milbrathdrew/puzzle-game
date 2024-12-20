@@ -121,33 +121,37 @@ export default function PuzzleSection({ puzzleNumber }) {
         }
     };
 
-
     if (puzzleState.completed) {
         const otherPuzzleCompleted = state[`puzzle${puzzleNumber === 1 ? 2 : 1}`].completed;
 
-        if (otherPuzzleCompleted) {
-            const code = [...state.puzzle1.digits, ...state.puzzle2.digits].join('');
+        if (otherPuzzleCompleted && puzzleNumber === 2) {
+            const code = [...(state.puzzle1.digits || []), ...(state.puzzle2.digits || [])].join('');
+
             return (
-                <div className="space-y-4 p-6 bg-emerald-50 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
-                    <h2 className="text-2xl font-bold text-emerald-700 animate-fade-in">
-                        Nice job, here are your answers! 🎉
-                    </h2>
-                    <div className="text-emerald-600">
-                        <p className="text-4xl font-bold animate-bounce-in hover:scale-110 transition-transform duration-300 inline-block">
-                            {code}
-                        </p>
+                <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+                    <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                        <span className="mr-2">🎄</span>
+                        Nice job, here are your answers!
+                    </h3>
+                    <div className="text-3xl font-bold text-white mb-4">
+                        Final Code: {code}
+                    </div>
+                    <div className="text-[#ffd700]">
+                        <p>Puzzle 1 numbers: {(state.puzzle1.digits || []).join('')}</p>
+                        <p>Puzzle 2 numbers: {(state.puzzle2.digits || []).join('')}</p>
                     </div>
                 </div>
             );
         }
 
         return (
-            <div className="space-y-4 p-6 bg-card rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold text-foreground animate-fade-in">
-                    Puzzle {puzzleNumber} Completed! 🎉
-                </h2>
+            <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                    <span className="mr-2">🎁</span>
+                    Puzzle {puzzleNumber} Completed!
+                </h3>
                 {puzzleNumber === 1 && (
-                    <p className="text-muted-foreground animate-slide-in">
+                    <p className="text-white">
                         Now proceed to Puzzle 2 to complete the challenge.
                     </p>
                 )}
@@ -155,17 +159,19 @@ export default function PuzzleSection({ puzzleNumber }) {
         );
     }
 
-    // Return the main puzzle UI if not completed
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">{currentPuzzle.title}</h2>
-            <p className="text-gray-600 mb-6">{currentPuzzle.description}</p>
+        <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+            <h2 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                <span className="mr-2">🎁</span>
+                {currentPuzzle.title}
+            </h2>
+            <p className="text-white mb-6">{currentPuzzle.description}</p>
 
             <div className="mb-6">
-                <p className="text-lg font-semibold mb-4">
+                <p className="text-lg font-semibold mb-4 text-[#ffd700]">
                     Question {currentQuestionIndex + 1} of {currentPuzzle.questions.length}
                 </p>
-                <p className="text-lg mb-4">{currentQuestion.question}</p>
+                <p className="text-lg mb-4 text-white">{currentQuestion.question}</p>
             </div>
 
             <div className="space-y-3">
@@ -173,7 +179,7 @@ export default function PuzzleSection({ puzzleNumber }) {
                     <button
                         key={option}
                         onClick={() => handleAnswerSubmit(option)}
-                        className="w-full p-3 text-left rounded bg-gray-100 hover:bg-gray-200 transition-colors"
+                        className="w-full p-3 text-left rounded bg-white/20 text-white hover:bg-white/30 transition-colors border border-[#c41e3a]"
                     >
                         {option}
                     </button>
@@ -181,22 +187,22 @@ export default function PuzzleSection({ puzzleNumber }) {
             </div>
 
             <div className="mt-6">
-                <Button
+                <button
                     onClick={() => setShowHint(!showHint)}
-                    variant="secondary"
+                    className="px-4 py-2 bg-[#c41e3a] text-white rounded hover:bg-[#a01830] transition-colors"
                 >
-                    {showHint ? 'Hide Hint' : 'Show Hint'}
-                </Button>
+                    {showHint ? '❄️ Hide Hint' : '🎄 Show Hint'}
+                </button>
             </div>
 
             {showHint && (
-                <p className="mt-4 text-gray-600 italic">
+                <p className="mt-4 text-[#ffd700] italic">
                     Hint: {currentQuestion.hint}
                 </p>
             )}
 
-            <div className="mt-6 border-t pt-4">
-                <p className="text-sm text-gray-500">
+            <div className="mt-6 border-t border-[#c41e3a] pt-4">
+                <p className="text-sm text-[#ffd700]">
                     Progress: {answers.length} / {currentPuzzle.questions.length} questions answered
                 </p>
             </div>

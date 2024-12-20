@@ -10,12 +10,11 @@ const WordFragment = ({ fragment }) => {
         <div
             draggable
             onDragStart={handleDragStart}
-            className="w-12 h-12 border-2 border-gray-400 rounded-md flex items-center justify-center cursor-move bg-white hover:border-blue-500"
+            className="w-12 h-12 border-2 border-[#c41e3a] rounded-md flex items-center justify-center cursor-move bg-[#1a472a] hover:border-[#ffd700]"
         >
-            <span className="text-xl font-bold">{fragment.letter}</span>
+            <span className="text-xl font-bold text-[#ffd700]">{fragment.letter}</span>
         </div>
     );
 };
 
 export default WordFragment;
-

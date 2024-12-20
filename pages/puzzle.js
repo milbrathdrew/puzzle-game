@@ -42,74 +42,78 @@ export default function PuzzlePage() {
     return (completedPuzzles / totalPuzzles) * 100;
   };
 
+  const arePuzzles1And2Completed = state.puzzle1?.completed && state.puzzle2?.completed;
+
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Time to Test Your Memory!</h1>
-          <p className="text-xl text-gray-600">Hopefully you remember your trivia answers...</p>
-        </div>
-
+      <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-[#1a472a] to-[#2d5a3f] min-h-screen">
         {/* Puzzle Sections */}
         <div className="mb-8">
           <PuzzleSection puzzleNumber={1} />
         </div>
 
-        {state.puzzle1.completed && (
+        {state.puzzle1?.completed && (
           <div className="mb-8">
             <PuzzleSection puzzleNumber={2} />
           </div>
         )}
 
-        {/* Word Puzzles */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Progress</h2>
-          <ProgressBar progress={calculateProgress()} />
-        </div>
+        {/* Blurred Section Container */}
+        <div className="relative">
+          {!arePuzzles1And2Completed && (
+            <div className="absolute inset-0 bg-[#1a472a]/50 backdrop-blur-md z-10 flex items-center justify-center">
+              <div className="text-center p-6 bg-white/90 rounded-lg shadow-lg border-2 border-[#c41e3a]">
+                <p className="text-lg font-bold text-[#c41e3a]">
+                  🎄 Complete Puzzles 1 and 2 to unlock this section
+                </p>
+                <p className="text-[#1a472a]">
+                  🔒 Locked
+                </p>
+              </div>
+            </div>
+          )}
+          
+          <div className={`${!arePuzzles1And2Completed ? 'pointer-events-none' : ''}`}>
+            {/* Title and Description */}
+            <div className="text-center mb-8 bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+              <h1 className="text-3xl font-bold text-white mb-2 text-shadow-lg">
+                🎄 Time to Test Your Memory! 🎄
+              </h1>
+              <p className="text-xl text-[#ffd700]">
+                Hopefully you remember your trivia answers...
+              </p>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-bold mb-4">Trivia 1: BAT</h3>
-            <WordFragmentation
-              word="BAT"
-              letters={PUZZLE_LETTERS.bat}
-              onComplete={(score) => handleWordPuzzleComplete('bat', score)}
-              completed={state.wordPuzzles?.bat?.completed}
-              triviaNumber={1}
-            />
-          </div>
+            {/* Progress Bar */}
+            <div className="mb-8 bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+              <h2 className="text-2xl font-bold mb-4 text-[#ffd700]">Progress</h2>
+              <ProgressBar 
+                progress={calculateProgress()} 
+                className="bg-[#c41e3a]" 
+              />
+            </div>
 
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-bold mb-4">Trivia 2: RING</h3>
-            <WordFragmentation
-              word="RING"
-              letters={PUZZLE_LETTERS.ring}
-              onComplete={(score) => handleWordPuzzleComplete('ring', score)}
-              completed={state.wordPuzzles?.ring?.completed}
-              triviaNumber={2}
-            />
-          </div>
-
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-bold mb-4">Trivia 3: FLAME</h3>
-            <WordFragmentation
-              word="FLAME"
-              letters={PUZZLE_LETTERS.flame}
-              onComplete={(score) => handleWordPuzzleComplete('flame', score)}
-              completed={state.wordPuzzles?.flame?.completed}
-              triviaNumber={3}
-            />
-          </div>
-
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-bold mb-4">Trivia 4: SUITCASE</h3>
-            <WordFragmentation
-              word="SUITCASE"
-              letters={PUZZLE_LETTERS.suitcase}
-              onComplete={(score) => handleWordPuzzleComplete('suitcase', score)}
-              completed={state.wordPuzzles?.suitcase?.completed}
-              triviaNumber={4}
-            />
+            {/* Word Puzzles Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {Object.entries(PUZZLE_LETTERS).map(([puzzleId, letters]) => (
+                <div 
+                  key={puzzleId} 
+                  className="border-2 border-[#c41e3a] rounded-lg p-6 bg-white/10 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
+                >
+                  <h3 className="text-lg font-bold mb-4 text-[#ffd700] flex items-center">
+                    <span className="mr-2">🎁</span>
+                    Trivia {puzzleId.toUpperCase()}
+                  </h3>
+                  <WordFragmentation
+                    word={puzzleId.toUpperCase()}
+                    letters={letters}
+                    onComplete={(score) => handleWordPuzzleComplete(puzzleId, score)}
+                    completed={state.wordPuzzles?.[puzzleId]?.completed}
+                    triviaNumber={Object.keys(PUZZLE_LETTERS).indexOf(puzzleId) + 1}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
