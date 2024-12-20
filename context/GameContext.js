@@ -7,13 +7,15 @@ const GameDispatchContext = createContext();
 const initialState = {
     puzzle1: {
         completed: false,
-        score: 0
+        score: 0,
+        digits: []
     },
     puzzle2: {
         completed: false,
-        score: 0
+        score: 0,
+        digits: []
     },
-    wordPuzzles: {  // Make sure this is in the initial state
+    wordPuzzles: {
         bat: {
             completed: false,
             score: 0,
@@ -61,7 +63,9 @@ function gameReducer(state, action) {
                 ...state,
                 [puzzleKey]: {
                     completed: true,
-                    score: action.payload.score
+                    score: action.payload.score,
+                    digits: action.payload.digits // Add this line
+
                 }
             };
         case 'RESET_GAME':

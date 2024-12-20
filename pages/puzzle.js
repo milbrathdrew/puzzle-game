@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import WordFragmentation from '../components/WordFragmentation';
 import { useGameState } from '../context/GameContext';
 import ProgressBar from '../components/ProgressBar';
+import PuzzleSection from '../components/PuzzleSection';
 
 const generatePuzzleLetters = (word, totalLetters = 12) => {
   const wordLetters = word.split('');
@@ -22,7 +23,7 @@ const PUZZLE_LETTERS = {
   suitcase: generatePuzzleLetters("SUITCASE", 15)
 };
 
-const PuzzlePage = () => {
+export default function PuzzlePage() {
   const { state, dispatch } = useGameState();
 
   const handleWordPuzzleComplete = (puzzleId, score) => {
@@ -48,9 +49,19 @@ const PuzzlePage = () => {
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Time to Test Your Memory!</h1>
           <p className="text-xl text-gray-600">Hopefully you remember your trivia answers...</p>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-8">
+        {/* Puzzle Sections */}
+        <div className="mb-8">
+          <PuzzleSection puzzleNumber={1} />
+        </div>
+
+        {state.puzzle1.completed && (
+          <div className="mb-8">
+            <PuzzleSection puzzleNumber={2} />
+          </div>
+        )}
+
+        {/* Word Puzzles */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Progress</h2>
           <ProgressBar progress={calculateProgress()} />
@@ -104,6 +115,4 @@ const PuzzlePage = () => {
       </div>
     </Layout>
   );
-};
-
-export default PuzzlePage;
+}
