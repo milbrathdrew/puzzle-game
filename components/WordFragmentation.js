@@ -1,19 +1,23 @@
-// WordFragmentation.js
+// components/WordFragmentation.js
 import React, { useState, useEffect } from 'react';
 import WordFragment from './WordFragment';
 
-const WordFragmentation = ({ word = "FRAGMENTATION", onComplete }) => {
+const WordFragmentation = ({ word = "FRAGMENTATION", letters, onComplete, completed }) => {
     const [fragments, setFragments] = useState([]);
     const [placedFragments, setPlacedFragments] = useState([]);
     const [isComplete, setIsComplete] = useState(false);
+    const [isIncorrect, setIsIncorrect] = useState(false);
     const [score, setScore] = useState(0);
 
     useEffect(() => {
-        initializeGame();
-    }, [word]);
+        if (!completed) {
+            initializeGame();
+        }
+    }, [completed]);
 
     const initializeGame = () => {
-        const initialFragments = word.split('').map((letter, index) => ({
+        const letterArray = letters || word.split('');
+        const initialFragments = letterArray.map((letter, index) => ({
             id: index,
             letter,
             isPlaced: false
@@ -21,6 +25,7 @@ const WordFragmentation = ({ word = "FRAGMENTATION", onComplete }) => {
         setFragments(shuffleArray([...initialFragments]));
         setPlacedFragments(new Array(word.length).fill(null));
         setIsComplete(false);
+        setIsIncorrect(false);
         setScore(0);
     };
 
@@ -56,16 +61,28 @@ const WordFragmentation = ({ word = "FRAGMENTATION", onComplete }) => {
     };
 
     const checkCompletion = (newPlacedFragments) => {
-        const completedWord = newPlacedFragments
-            .filter(f => f !== null)
-            .map(f => f.letter)
-            .join('');
+        const isWordComplete = newPlacedFragments.every(f => f !== null);
+        
+        if (isWordComplete) {
+            const completedWord = newPlacedFragments
+                .map(f => f.letter)
+                .join('');
 
-        if (completedWord === word) {
-            setIsComplete(true);
-            setScore(prev => prev + 100);
-            if (onComplete) {
-                onComplete(score + 100);
+            if (completedWord === word) {
+                setIsComplete(true);
+                setIsIncorrect(false);
+                const newScore = score + 100;
+                setScore(newScore);
+                if (onComplete) {
+                    onComplete(newScore);
+                }
+            } else {
+                setIsIncorrect(true);
+                setTimeout(() => {
+                    setIsIncorrect(false);
+                    setPlacedFragments(new Array(word.length).fill(null));
+                    setFragments(prev => prev.map(f => ({ ...f, isPlaced: false })));
+                }, 2000);
             }
         }
     };
@@ -75,46 +92,60 @@ const WordFragmentation = ({ word = "FRAGMENTATION", onComplete }) => {
     };
 
     return (
-        <div className="flex flex-col items-center gap-6 p-4">
-            <div className="flex justify-between w-full px-4">
-                <h2 className="text-xl font-bold">Word Fragmentation Puzzle</h2>
-                <div className="text-lg">Score: {score}</div>
+        <div className="p-4">
+            <div className="mb-4 text-center">
+                <h2 className="text-xl font-bold mb-2">
+                    Word Fragmentation Puzzle
+                </h2>
+                <p className="text-lg">Score: {score}</p>
             </div>
 
-            {/* Target area */}
-            <div className="flex gap-1 p-4 bg-gray-100 rounded-lg">
+            <div className={`flex flex-wrap justify-center gap-2 mb-4 min-h-[60px] p-2 rounded transition-colors duration-300
+                ${isIncorrect ? 'bg-red-100' : isComplete ? 'bg-green-100' : 'bg-gray-50'}`}>
                 {placedFragments.map((fragment, index) => (
                     <div
-                        key={index}
+                        key={`target-${index}`}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, index)}
-                        className="w-12 h-12 border-2 border-dashed border-gray-400 rounded-md"
+                        className={`w-12 h-12 border-2 border-dashed rounded-md flex items-center justify-center transition-colors duration-300
+                            ${isIncorrect ? 'border-red-400' : isComplete ? 'border-green-400' : 'border-gray-400'}`}
                     >
                         {fragment && (
-                            <WordFragment fragment={fragment} />
+                            <div className={`w-10 h-10 text-white rounded flex items-center justify-center font-bold transition-colors duration-300
+                                ${isIncorrect ? 'bg-red-500' : isComplete ? 'bg-green-500' : 'bg-blue-500'}`}>
+                                {fragment.letter}
+                            </div>
                         )}
                     </div>
                 ))}
             </div>
 
-            {/* Available fragments */}
-            <div className="flex flex-wrap gap-2 justify-center">
+            {isIncorrect && (
+                <div className="text-center mt-2 animate-fade-in">
+                    <p className="text-red-600">Try again! That's not the correct word.</p>
+                </div>
+            )}
+
+            <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {fragments.filter(f => !f.isPlaced).map((fragment) => (
                     <WordFragment
                         key={fragment.id}
-                        fragment={fragment}
+                        id={fragment.id}
+                        letter={fragment.letter}
                     />
                 ))}
             </div>
 
             {isComplete && (
-                <div className="flex flex-col items-center gap-4">
-                    <div className="text-green-500 font-bold text-lg">
-                        Congratulations! You completed the word!
+                <div className="text-center mt-4">
+                    <div className="bg-green-100 p-4 rounded-lg mb-4">
+                        <p className="text-green-800 font-bold">
+                            Congratulations! You completed the word!
+                        </p>
                     </div>
                     <button
                         onClick={handleReset}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                     >
                         Play Again
                     </button>
