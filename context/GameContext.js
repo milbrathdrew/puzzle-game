@@ -1,94 +1,99 @@
 // context/GameContext.js
-import { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 
-const GameContext = createContext();
+const GameStateContext = createContext();
+const GameDispatchContext = createContext();
 
 const initialState = {
-  currentPuzzle: 1,
-  puzzle1: {
-    clues: ['', '', '', ''],
-    completed: false,
-    digits: [],
-  },
-  puzzle2: {
-    clues: ['', '', '', ''],
-    completed: false,
-    digits: [],
-  },
-  finalCode: '',
-  attempts: {
-    puzzle1: [0, 0, 0, 0],
-    puzzle2: [0, 0, 0, 0],
-  },
+    puzzle1: {
+        completed: false,
+        score: 0,
+        digits: []
+    },
+    puzzle2: {
+        completed: false,
+        score: 0,
+        digits: []
+    },
+    wordPuzzles: {
+        bat: {
+            completed: false,
+            score: 0,
+            word: "BAT",
+            order: 1
+        },
+        ring: {
+            completed: false,
+            score: 0,
+            word: "RING",
+            order: 2
+        },
+        flame: {
+            completed: false,
+            score: 0,
+            word: "FLAME",
+            order: 3
+        },
+        suitcase: {
+            completed: false,
+            score: 0,
+            word: "SUITCASE",
+            order: 4
+        }
+    }
 };
 
-const gameReducer = (state, action) => {
-  switch (action.type) {
-    case 'UPDATE_CLUE':
-      const { puzzleNumber, clueIndex, value } = action.payload;
-      const puzzleKey = `puzzle${puzzleNumber}`;
-      return {
-        ...state,
-        [puzzleKey]: {
-          ...state[puzzleKey],
-          clues: state[puzzleKey].clues.map((clue, index) =>
-            index === clueIndex ? value : clue
-          ),
-        },
-      };
+function gameReducer(state, action) {
+    switch (action.type) {
+        case 'COMPLETE_WORD_PUZZLE':
+            return {
+                ...state,
+                wordPuzzles: {
+                    ...state.wordPuzzles,
+                    [action.payload.puzzleId]: {
+                        ...state.wordPuzzles[action.payload.puzzleId],
+                        completed: true,
+                        score: action.payload.score
+                    }
+                }
+            };
+        case 'COMPLETE_PUZZLE':
+            const puzzleKey = `puzzle${action.payload.puzzleNumber}`;
+            return {
+                ...state,
+                [puzzleKey]: {
+                    completed: true,
+                    score: action.payload.score,
+                    digits: action.payload.digits // Add this line
 
-    case 'COMPLETE_PUZZLE':
-      return {
-        ...state,
-        [`puzzle${action.payload.puzzleNumber}`]: {
-          ...state[`puzzle${action.payload.puzzleNumber}`],
-          completed: true,
-          digits: action.payload.digits,
-        },
-        currentPuzzle: action.payload.puzzleNumber === 1 ? 2 : state.currentPuzzle,
-      };
-
-    case 'SET_FINAL_CODE':
-      return {
-        ...state,
-        finalCode: action.payload,
-      };
-
-    case 'INCREMENT_ATTEMPT':
-      const { puzzle, clueIdx } = action.payload;
-      const attemptsKey = `puzzle${puzzle}`;
-      return {
-        ...state,
-        attempts: {
-          ...state.attempts,
-          [attemptsKey]: state.attempts[attemptsKey].map((attempt, idx) =>
-            idx === clueIdx ? attempt + 1 : attempt
-          ),
-        },
-      };
-
-    case 'RESET_GAME':
-      return initialState;
-
-    default:
-      return state;
-  }
-};
+                }
+            };
+        case 'RESET_GAME':
+            return initialState;
+        default:
+            return state;
+    }
+}
 
 export function GameProvider({ children }) {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+    const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  return (
-    <GameContext.Provider value={{ state, dispatch }}>
-      {children}
-    </GameContext.Provider>
-  );
+    return (
+        <GameStateContext.Provider value={state}>
+            <GameDispatchContext.Provider value={dispatch}>
+                {children}
+            </GameDispatchContext.Provider>
+        </GameStateContext.Provider>
+    );
 }
 
 export function useGameState() {
-  const context = useContext(GameContext);
-  if (!context) {
-    throw new Error('useGameState must be used within a GameProvider');
-  }
-  return context;
+    const state = useContext(GameStateContext);
+    const dispatch = useContext(GameDispatchContext);
+    
+    if (state === undefined || dispatch === undefined) {
+        throw new Error('useGameState must be used within a GameProvider');
+    }
+    
+    return { state, dispatch };
 }

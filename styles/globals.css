@@ -15,7 +15,68 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #c41e3a;
+  color: white;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a472a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c41e3a;
+  border: 2px solid #ffd700;
+  border-radius: 6px;
+}
+
+.hint-graphic.visible {
+    opacity: 1;
+}
+
+.hint-image {
+    max-width: 600px; /* Doubled size */
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: moveDVD 15s linear infinite both;
+}
+
+.hint-graphic {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+    z-index: 50;
+    overflow: hidden;
+    padding: 50px; /* Added padding to keep image from touching edges */
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hint-image {
+    max-width: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: 
+        moveDVD 15s linear infinite both,
+        spin 5s linear infinite; /* Added slow spin animation */
+}
+
+

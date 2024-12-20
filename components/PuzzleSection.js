@@ -86,74 +86,92 @@ export default function PuzzleSection({ puzzleNumber }) {
     const puzzleState = state[`puzzle${puzzleNumber}`];
     const currentQuestion = currentPuzzle.questions[currentQuestionIndex];
 
-const handleAnswerSubmit = (selectedAnswer) => {
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-        const newAnswers = [...answers, selectedAnswer];
-        setAnswers(newAnswers);
+    const handleAnswerSubmit = (selectedAnswer) => {
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            const newAnswers = [...answers, selectedAnswer];
+            setAnswers(newAnswers);
 
-        if (currentQuestionIndex < currentPuzzle.questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setShowHint(false);
+            if (currentQuestionIndex < currentPuzzle.questions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+                setShowHint(false);
+            } else {
+                console.log('Puzzle completed!');
+                console.log('Puzzle number:', puzzleNumber);
+                console.log('Final digits:', currentPuzzle.finalDigits);
+
+                // Updated dispatch to match reducer case
+
+                dispatch({
+                    type: 'COMPLETE_PUZZLE',
+                    payload: {
+                        puzzleNumber: puzzleNumber,
+                        digits: currentPuzzle.finalDigits
+                    }
+                });
+
+                // Add debug log after dispatch
+                console.log('State after dispatch:', state);
+
+                setCurrentQuestionIndex(0);
+                setAnswers([]);
+                setShowHint(false);
+            }
         } else {
-            console.log('Puzzle completed!');
-            console.log('Puzzle number:', puzzleNumber);
-            console.log('Final digits:', currentPuzzle.finalDigits);
-            
-            // Updated dispatch to match reducer case
-            
-            dispatch({
-                type: 'COMPLETE_PUZZLE',
-                payload: {
-                    puzzleNumber: puzzleNumber,
-                    digits: currentPuzzle.finalDigits
-                }
-            });
-
-            // Add debug log after dispatch
-            console.log('State after dispatch:', state);
-            
-            setCurrentQuestionIndex(0);
-            setAnswers([]);
-            setShowHint(false);
+            alert('Incorrect answer. Try again!');
         }
-    } else {
-        alert('Incorrect answer. Try again!');
+    };
+
+    if (puzzleState.completed) {
+        const otherPuzzleCompleted = state[`puzzle${puzzleNumber === 1 ? 2 : 1}`].completed;
+
+        if (otherPuzzleCompleted && puzzleNumber === 2) {
+            const code = [...(state.puzzle1.digits || []), ...(state.puzzle2.digits || [])].join('');
+
+            return (
+                <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+                    <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                        <span className="mr-2">🎄</span>
+                        Nice job, here are your answers!
+                    </h3>
+                    <div className="text-3xl font-bold text-white mb-4">
+                        Final Code: {code}
+                    </div>
+                    <div className="text-[#ffd700]">
+                        <p>Puzzle 1 numbers: {(state.puzzle1.digits || []).join('')}</p>
+                        <p>Puzzle 2 numbers: {(state.puzzle2.digits || []).join('')}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                    <span className="mr-2">🎁</span>
+                    Puzzle {puzzleNumber} Completed!
+                </h3>
+                {puzzleNumber === 1 && (
+                    <p className="text-white">
+                        Now proceed to Puzzle 2 to complete the challenge.
+                    </p>
+                )}
+            </div>
+        );
     }
-};
-
-    
-if (puzzleState.completed) {
-    return (
-        <div className="bg-green-100 p-6 rounded-lg transform transition-all duration-500 ease-in-out hover:scale-105">
-            <h3 className="text-xl font-semibold text-green-800 flex items-center">
-                Puzzle {puzzleNumber} Completed! 
-                <span className="ml-2 animate-bounce">🎉</span>
-            </h3>
-            <p className="mt-2 text-green-700">Your digits: 
-                <span className="font-bold text-xl ml-2">
-                    {puzzleState.digits.join('')}
-                </span>
-            </p>
-            {puzzleNumber === 1 && (
-                <p className="mt-4 text-sm text-green-600">
-                    Great job! Now proceed to Puzzle 2 to complete the challenge.
-                </p>
-            )}
-        </div>
-    );
-}
-
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">{currentPuzzle.title}</h2>
-            <p className="text-gray-600 mb-6">{currentPuzzle.description}</p>
+        <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+            <h2 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
+                <span className="mr-2">🎁</span>
+                {currentPuzzle.title}
+            </h2>
+            <p className="text-white mb-6">{currentPuzzle.description}</p>
 
             <div className="mb-6">
-                <p className="text-lg font-semibold mb-4">
+                <p className="text-lg font-semibold mb-4 text-[#ffd700]">
                     Question {currentQuestionIndex + 1} of {currentPuzzle.questions.length}
                 </p>
-                <p className="text-lg mb-4">{currentQuestion.question}</p>
+                <p className="text-lg mb-4 text-white">{currentQuestion.question}</p>
             </div>
 
             <div className="space-y-3">
@@ -161,7 +179,7 @@ if (puzzleState.completed) {
                     <button
                         key={option}
                         onClick={() => handleAnswerSubmit(option)}
-                        className="w-full p-3 text-left rounded bg-gray-100 hover:bg-gray-200 transition-colors"
+                        className="w-full p-3 text-left rounded bg-white/20 text-white hover:bg-white/30 transition-colors border border-[#c41e3a]"
                     >
                         {option}
                     </button>
@@ -169,25 +187,25 @@ if (puzzleState.completed) {
             </div>
 
             <div className="mt-6">
-                <Button
+                <button
                     onClick={() => setShowHint(!showHint)}
-                    variant="secondary"
+                    className="px-4 py-2 bg-[#c41e3a] text-white rounded hover:bg-[#a01830] transition-colors"
                 >
-                    {showHint ? 'Hide Hint' : 'Show Hint'}
-                </Button>
+                    {showHint ? '❄️ Hide Hint' : '🎄 Show Hint'}
+                </button>
             </div>
 
             {showHint && (
-                <p className="mt-4 text-gray-600 italic">
+                <p className="mt-4 text-[#ffd700] italic">
                     Hint: {currentQuestion.hint}
                 </p>
             )}
 
-            <div className="mt-6 border-t pt-4">
-                <p className="text-sm text-gray-500">
+            <div className="mt-6 border-t border-[#c41e3a] pt-4">
+                <p className="text-sm text-[#ffd700]">
                     Progress: {answers.length} / {currentPuzzle.questions.length} questions answered
                 </p>
             </div>
         </div>
     );
-}
+};
