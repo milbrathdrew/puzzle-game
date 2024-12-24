@@ -5,6 +5,8 @@ import WordFragmentation from '../components/WordFragmentation';
 import { useGameState } from '../context/GameContext';
 import ProgressBar from '../components/ProgressBar';
 import PuzzleSection from '../components/PuzzleSection';
+import EmbeddedPuzzle from '../components/EmbeddedPuzzle';
+
 
 const generatePuzzleLetters = (word, totalLetters = 12) => {
   const wordLetters = word.split('');
@@ -77,7 +79,7 @@ export default function PuzzlePage() {
         </div>
 
         {/* Word Fragmentation Section with Blur */}
-        <div className="relative">
+        <div className="relative mb-8">
           {/* Title and Description */}
           <div className="text-center mb-8 bg-white/10 rounded-lg p-6 backdrop-blur-sm">
             <h1 className="text-3xl font-bold text-white mb-2 text-shadow-lg">
@@ -87,7 +89,7 @@ export default function PuzzlePage() {
               Hopefully you remember your trivia answers...
             </p>
             <p className="text-xl text-white">
-              Each word puzzle is a reference to one of the trivia sections. Good Luck! 
+              Each word puzzle is a reference to one of the trivia sections. Good Luck!
             </p>
           </div>
 
@@ -129,7 +131,37 @@ export default function PuzzlePage() {
             </div>
           )}
         </div>
+
+        {/* Embedded Puzzle Section */}
+        <div className="relative">
+          {/* Title */}
+          <div className="text-center mb-8 bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+            <h1 className="text-3xl font-bold text-white mb-2 text-shadow-lg">
+              🎄 Final Challenge! 🎄
+            </h1>
+            <p className="text-xl text-[#ffd700]">
+              Complete this puzzle to finish your journey...
+            </p>
+          </div>
+          {/* Embedded Puzzle */}
+          <div className={`relative rounded-lg p-6 bg-white/10 backdrop-blur-sm min-h-[500px] ${!arePuzzles1And2Completed ? 'opacity-50 pointer-events-none' : ''}`}>
+            <EmbeddedPuzzle />
+          </div>
+          {/* Locked Overlay for Embedded Puzzle */}
+          {!arePuzzles1And2Completed && (
+            <div className="absolute inset-0 bg-[#1a472a]/50 backdrop-blur-md z-10 flex items-start justify-center">
+              <div className="text-center p-6 bg-white/90 rounded-lg shadow-lg border-2 border-[#c41e3a] mt-8">
+                <p className="text-lg font-bold text-[#c41e3a]">
+                  🎄 Complete Previous Puzzles to Unlock Final Challenge
+                </p>
+                <p className="text-[#1a472a]">
+                  🔒 Locked
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </Layout>
+    </Layout >
   );
 }  
