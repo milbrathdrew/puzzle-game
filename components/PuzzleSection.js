@@ -134,9 +134,6 @@ export default function PuzzleSection({ puzzleNumber }) {
                         <span className="mr-2">🎄</span>
                         Nice job, here are your answers!
                     </h3>
-                    <div className="text-3xl font-bold text-white mb-4">
-                        Final Code: {code}
-                    </div>
                     <div className="text-[#ffd700]">
                         <p>Puzzle 1 numbers: {(state.puzzle1.digits || []).join('')}</p>
                         <p>Puzzle 2 numbers: {(state.puzzle2.digits || []).join('')}</p>
