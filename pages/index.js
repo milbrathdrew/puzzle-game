@@ -31,8 +31,9 @@ export default function Home() {
               <ul className="text-white space-y-3 list-inside list-disc">
                 <li>Answer all Puzzle 1 Questions to Unlock Puzzle 2</li>
                 <li>Answer all Puzzle 2 Questions to Unlock Puzzle 3</li>
-                <li>Answer all Puzzle 3 Questions correctly to unlock your big gift</li>
-                <li>Use the generated codes to solve the riddle unlocking your small gift</li>
+                <li>Answer all Puzzle 3 Questions to Unlock Puzzle 4</li>
+                <li>Use your clues on the page to determine the final passcode</li>
+                <li>Doing this correctly will unlock your big gift, and small gift!</li>
               </ul>
             </div>
 

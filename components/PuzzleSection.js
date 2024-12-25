@@ -17,18 +17,19 @@ const puzzleData = {
             },
             {
                 id: 2,
-                question: "In The Lord of the Rings: The Fellowship of the Ring, how many members are in the Fellowship?",
-                options: ["7", "8", "9", "10"],
-                correctAnswer: "9",
-                hint: "Do you want the hint or the whole answer gift-wrapped?"
-            },
-            {
-                id: 3,
                 question: "In Heat, how many criminal heists are planned and executed throughout the movie?",
                 options: ["2", "3", "4", "5"],
                 correctAnswer: "3",
                 hint: "Hints are for quitters, and I know you’re not one… right?"
             },
+            {
+                id: 3,
+                question: "In The Lord of the Rings: The Fellowship of the Ring, how many members are in the Fellowship?",
+                options: ["7", "8", "9", "10"],
+                correctAnswer: "9",
+                hint: "Do you want the hint or the whole answer gift-wrapped?"
+            },
+
             {
                 id: 4,
                 question: "In Pulp Fiction, how many different storylines are woven throughout the film?",
