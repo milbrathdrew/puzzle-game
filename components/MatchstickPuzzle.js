@@ -16,6 +16,7 @@ const MatchstickPuzzle = () => {
         Solve the matchstick puzzle!
         <ul>
            Your task is to identify the next correct number in the sequence. 
+           Multiply each of the numbers to receive your passcode.
         </ul>
       </p>
     </div>
