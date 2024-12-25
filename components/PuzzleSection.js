@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useGameState } from '../context/GameContext';
 import Button from './Button';
+import { useRouter } from 'next/router';
+
 
 const puzzleData = {
     1: {
@@ -85,6 +87,8 @@ export default function PuzzleSection({ puzzleNumber }) {
     const [feedback, setFeedback] = useState(null);
     const [audioLoaded, setAudioLoaded] = useState(false);
     const wrongAnswerSound = useRef(null);
+    const [showAlert, setShowAlert] = useState(true);
+    const router = useRouter();
 
     const currentPuzzle = puzzleData[puzzleNumber];
     const puzzleState = state[`puzzle${puzzleNumber}`];
@@ -94,6 +98,25 @@ export default function PuzzleSection({ puzzleNumber }) {
         wrongAnswerSound.current = new Audio('/audio/oof.mp3');
         setAudioLoaded(true);
     }, []);
+    /*
+        useEffect(() => {
+            const timer = setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
+    
+            return () => clearTimeout(timer);
+        }, []);
+        */
+
+
+    const handleGoToStart = () => {
+        router.push('/');
+    };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
+
 
     const showFeedback = (type, message) => {
         setFeedback({ type, message });
@@ -169,17 +192,42 @@ export default function PuzzleSection({ puzzleNumber }) {
 
     return (
         <div className="relative rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+            {showAlert && puzzleNumber === 1 && (
+                <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+                    <div className="bg-white mt-4 p-4 rounded-lg shadow-lg max-w-sm mx-4 text-center">
+                        <p className="mb-4 text-black">If the audio is distorted, go back, then forward in your browser</p>
+                        <div className="flex space-x-4 justify-center">
+                            <button
+                                onClick={handleGoToStart}
+                                className="bg-[#c41e3a] text-white px-4 py-2 rounded hover:bg-[#a01830] transition-colors"
+                            >
+                                Go to Start Screen
+                            </button>
+                            <button
+                                onClick={handleCloseAlert}
+                                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+                            >
+                                Continue to Puzzles, audio sounds good
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
             {feedback && (
-                <div 
+                <div
                     className={`
-                        absolute top-4 left-1/2 transform -translate-x-1/2 
-                        px-6 py-3 rounded-lg shadow-lg
-                        transition-all duration-300 ease-in-out
-                        ${feedback.type === 'success' 
-                            ? 'bg-green-500 text-white' 
+                    absolute top-4 left-1/2 transform -translate-x-1/2 
+                    px-6 py-3 rounded-lg shadow-lg
+                    transition-all duration-300 ease-in-out
+                    ${feedback.type === 'success'
+                            ? 'bg-green-500 text-white'
                             : 'bg-red-500 text-white'
                         }
-                    `}
+                `}
                     style={{
                         animation: 'slideDown 0.5s ease-out',
                         zIndex: 50
@@ -238,20 +286,18 @@ export default function PuzzleSection({ puzzleNumber }) {
             </div>
 
             <style jsx>{`
-                @keyframes slideDown {
-                    from {
-                        transform: translate(-50%, -100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translate(-50%, 0);
-                        opacity: 1;
-                    }
+            @keyframes slideDown {
+                from {
+                    transform: translate(-50%, -100%);
+                    opacity: 0;
                 }
-            `}</style>
+                to {
+                    transform: translate(-50%, 0);
+                    opacity: 1;
+                }
+            }
+        `}</style>
         </div>
     );
+
 }
-
-
-
