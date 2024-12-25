@@ -79,4 +79,26 @@ body {
         spin 5s linear infinite; /* Added slow spin animation */
 }
 
+/* Matchstick Puzzle Styles */
+.matchstick-puzzle {
+  @apply max-w-3xl mx-auto p-5 text-center;
+}
+
+.matchstick-equation {
+  @apply text-5xl my-10 flex justify-center items-center gap-5;
+}
+
+.matchstick-instructions {
+  @apply mt-8 p-5 bg-gray-100 rounded-lg;
+}
+
+.matchstick-success {
+  @apply text-green-600 text-2xl my-5;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
