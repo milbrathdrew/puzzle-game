@@ -4,26 +4,28 @@ import React from 'react';
 const MatchstickPuzzle = () => {
   return (
     <div className="text-center p-6 bg-white/10 rounded-lg backdrop-blur-sm">
-      <a 
-        href="https://app.compositor.digital/display/Bjxr" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="inline-block px-6 py-3 text-xl font-bold text-white bg-[#c41e3a] hover:bg-[#a01830] rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mb-6"
-      >
-        🔥 Click here to open Matchstick Compositor
-      </a>
-      
-      <div className="mt-6 text-white">
+      {/* Context First */}
+      <div className="text-white mb-8">
         <h3 className="text-2xl font-bold mb-4">
           Solve the matchstick puzzle!
         </h3>
         
-        <div className="bg-white/20 p-6 rounded-lg">
+        <div className="bg-white/20 p-6 rounded-lg mb-6">
           <ul className="space-y-2 text-lg">
             <li>✨ Your task is to identify the next correct number in the sequence.</li>
             <li>✨ Multiply each of the numbers to receive your passcode.</li>
           </ul>
         </div>
+
+        {/* Button Moved Below Context */}
+        <a 
+          href="https://app.compositor.digital/display/Bjxr" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="inline-block px-6 py-3 text-xl font-bold text-white bg-[#c41e3a] hover:bg-[#a01830] rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          🔥 Click here to open Matchstick Compositor
+        </a>
       </div>
     </div>
   );

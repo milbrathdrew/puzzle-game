@@ -1,5 +1,5 @@
 // components/PuzzleSection.js
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useGameState } from '../context/GameContext';
 import Button from './Button';
 
@@ -13,28 +13,28 @@ const puzzleData = {
                 question: "In The Dark Knight, how many main characters are in the film (including Batman and the Joker)?",
                 options: ["3", "4", "5", "6"],
                 correctAnswer: "4",
-                hint: "Think about Batman, Joker, Harvey Dent, and Rachel."
+                hint: "Sure, the hint is: try thinking harder.."
             },
             {
                 id: 2,
                 question: "In The Lord of the Rings: The Fellowship of the Ring, how many members are in the Fellowship?",
                 options: ["7", "8", "9", "10"],
                 correctAnswer: "9",
-                hint: "Count Frodo, Sam, Merry, Pippin, Gandalf, Aragorn, Legolas, Gimli, and Boromir."
+                hint: "Do you want the hint or the whole answer gift-wrapped?"
             },
             {
                 id: 3,
                 question: "In Heat, how many criminal heists are planned and executed throughout the movie?",
                 options: ["2", "3", "4", "5"],
                 correctAnswer: "3",
-                hint: "Think about the bank job, armored car robbery, and the final big heist."
+                hint: "Hints are for quitters, and I know you’re not one… right?"
             },
             {
                 id: 4,
                 question: "In Pulp Fiction, how many different storylines are woven throughout the film?",
                 options: ["2", "3", "4", "5"],
                 correctAnswer: "3",
-                hint: "Consider Vincent and Mia's story, Butch's story, and Jules and Vincent's redemption arc."
+                hint: "A hint? Aren’t you the smart one in this conversation?"
             }
         ],
         finalDigits: [4, 3]
@@ -48,28 +48,28 @@ const puzzleData = {
                 question: "Which movie won Best Picture at the Academy Awards in 2000?",
                 options: ["American Beauty", "Gladiator", "Traffic", "Crouching Tiger, Hidden Dragon"],
                 correctAnswer: "Gladiator",
-                hint: "This epic historical drama starred Russell Crowe as a Roman general."
+                hint: "Hints? In this economy?"
             },
             {
                 id: 2,
                 question: "Which actor won the Best Actor award in 2014 for his role in The Theory of Everything?",
                 options: ["Benedict Cumberbatch", "Eddie Redmayne", "Michael Keaton", "Bradley Cooper"],
                 correctAnswer: "Eddie Redmayne",
-                hint: "He portrayed physicist Stephen Hawking in this biographical drama."
+                hint: "You don’t need a hint—you need a moment of silence to think."
             },
             {
                 id: 3,
                 question: "Which movie won Best Animated Feature at the 2003 Academy Awards?",
                 options: ["Shrek", "Finding Nemo", "Spirited Away", "Monsters, Inc."],
                 correctAnswer: "Finding Nemo",
-                hint: "This Pixar film features a clownfish searching for his son."
+                hint: "Here’s your hint: it’s not as hard as you’re making it."
             },
             {
                 id: 4,
                 question: "Which TV show won Best Drama Series at the 2016 Primetime Emmy Awards?",
                 options: ["Game of Thrones", "Better Call Saul", "House of Cards", "Mr. Robot"],
                 correctAnswer: "Game of Thrones",
-                hint: "This HBO fantasy series was based on George R.R. Martin's novels."
+                hint: "Do I look like a hint vending machine to you?"
             }
         ],
         finalDigits: [9, 3]
@@ -81,10 +81,23 @@ export default function PuzzleSection({ puzzleNumber }) {
     const [showHint, setShowHint] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState([]);
+    const [feedback, setFeedback] = useState(null);
+    const [audioLoaded, setAudioLoaded] = useState(false);
+    const wrongAnswerSound = useRef(null);
 
     const currentPuzzle = puzzleData[puzzleNumber];
     const puzzleState = state[`puzzle${puzzleNumber}`];
     const currentQuestion = currentPuzzle.questions[currentQuestionIndex];
+
+    useEffect(() => {
+        wrongAnswerSound.current = new Audio('/audio/oof.mp3');
+        setAudioLoaded(true);
+    }, []);
+
+    const showFeedback = (type, message) => {
+        setFeedback({ type, message });
+        setTimeout(() => setFeedback(null), 3000);
+    };
 
     const handleAnswerSubmit = (selectedAnswer) => {
         if (selectedAnswer === currentQuestion.correctAnswer) {
@@ -92,15 +105,13 @@ export default function PuzzleSection({ puzzleNumber }) {
             setAnswers(newAnswers);
 
             if (currentQuestionIndex < currentPuzzle.questions.length - 1) {
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
-                setShowHint(false);
+                showFeedback('success', '✨ Correct! Moving to next question...');
+                setTimeout(() => {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    setShowHint(false);
+                }, 1000);
             } else {
-                console.log('Puzzle completed!');
-                console.log('Puzzle number:', puzzleNumber);
-                console.log('Final digits:', currentPuzzle.finalDigits);
-
-                // Updated dispatch to match reducer case
-
+                showFeedback('success', '🎉 Congratulations! Puzzle Complete!');
                 dispatch({
                     type: 'COMPLETE_PUZZLE',
                     payload: {
@@ -108,16 +119,17 @@ export default function PuzzleSection({ puzzleNumber }) {
                         digits: currentPuzzle.finalDigits
                     }
                 });
-
-                // Add debug log after dispatch
-                console.log('State after dispatch:', state);
-
                 setCurrentQuestionIndex(0);
                 setAnswers([]);
                 setShowHint(false);
             }
         } else {
-            alert('Incorrect answer. Try again!');
+            if (audioLoaded && wrongAnswerSound.current) {
+                wrongAnswerSound.current.currentTime = 0;
+                wrongAnswerSound.current.play()
+                    .catch(e => console.log('Audio play failed:', e));
+            }
+            showFeedback('error', '❌ Incorrect answer. Try again!');
         }
     };
 
@@ -125,10 +137,8 @@ export default function PuzzleSection({ puzzleNumber }) {
         const otherPuzzleCompleted = state[`puzzle${puzzleNumber === 1 ? 2 : 1}`].completed;
 
         if (otherPuzzleCompleted && puzzleNumber === 2) {
-            const code = [...(state.puzzle1.digits || []), ...(state.puzzle2.digits || [])].join('');
-
             return (
-                <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+                <div className="rounded-lg p-6 bg-white/10 backdrop-blur-sm">
                     <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
                         <span className="mr-2">🎄</span>
                         Nice job, here are your answers!
@@ -142,7 +152,7 @@ export default function PuzzleSection({ puzzleNumber }) {
         }
 
         return (
-            <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+            <div className="rounded-lg p-6 bg-white/10 backdrop-blur-sm">
                 <h3 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
                     <span className="mr-2">🎁</span>
                     Puzzle {puzzleNumber} Completed!
@@ -157,7 +167,29 @@ export default function PuzzleSection({ puzzleNumber }) {
     }
 
     return (
-        <div className=" rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+        <div className="relative rounded-lg p-6 bg-white/10 backdrop-blur-sm">
+            {feedback && (
+                <div 
+                    className={`
+                        absolute top-4 left-1/2 transform -translate-x-1/2 
+                        px-6 py-3 rounded-lg shadow-lg
+                        transition-all duration-300 ease-in-out
+                        ${feedback.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-red-500 text-white'
+                        }
+                    `}
+                    style={{
+                        animation: 'slideDown 0.5s ease-out',
+                        zIndex: 50
+                    }}
+                >
+                    <div className="flex items-center space-x-2">
+                        <span className="text-lg">{feedback.message}</span>
+                    </div>
+                </div>
+            )}
+
             <h2 className="text-2xl font-bold mb-4 text-[#ffd700] flex items-center">
                 <span className="mr-2">🎁</span>
                 {currentPuzzle.title}
@@ -203,6 +235,22 @@ export default function PuzzleSection({ puzzleNumber }) {
                     Progress: {answers.length} / {currentPuzzle.questions.length} questions answered
                 </p>
             </div>
+
+            <style jsx>{`
+                @keyframes slideDown {
+                    from {
+                        transform: translate(-50%, -100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translate(-50%, 0);
+                        opacity: 1;
+                    }
+                }
+            `}</style>
         </div>
     );
-};
+}
+
+
+
