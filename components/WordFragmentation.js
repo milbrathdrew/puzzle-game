@@ -171,9 +171,6 @@ const WordFragmentation = ({ word = "FRAGMENTATION", letters, onComplete, comple
             />
 
             <div className="mb-4 text-center">
-                <h2 className="text-xl font-bold mb-2">
-                    Word Fragmentation Puzzle
-                </h2>
                 <p className="text-lg">Score: {score}</p>
             </div>
 

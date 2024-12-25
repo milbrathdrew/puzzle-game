@@ -150,7 +150,7 @@ export default function PuzzlePage() {
                 >
                   <h3 className="text-lg font-bold mb-4 text-[#ffd700] flex items-center">
                     <span className="mr-2">🎁</span>
-                    Trivia {puzzleId.toUpperCase()}
+                    Word Fragmentation Puzzle
                   </h3>
                   <WordFragmentation
                     word={puzzleId.toUpperCase()}
@@ -327,10 +327,7 @@ export default function PuzzlePage() {
     {/* Bottom Message */}
     <div className="text-center mt-8 bg-white/10 p-4 rounded-lg">
       <p className="text-xl text-white">
-        🎁 Merry Christmas! Pack your bags for an unforgettable winter adventure! 🏔️
-      </p>
-      <p className="text-[#ffd700] mt-2">
-        Your winter getaway awaits at Snowshoe Mountain Resort
+        I LOVE YOU SO MUCH AND I HOPE YOU LIKE YOUR GIFTS
       </p>
     </div>
   </div>
