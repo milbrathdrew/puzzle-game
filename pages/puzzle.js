@@ -263,31 +263,79 @@ export default function PuzzlePage() {
           )}
         </div>
 
-        {/* Images Section - Will show when unlocked */}
-        {isUnlocked && (
-          <div className="mt-6 p-6 bg-white/20 rounded-lg backdrop-blur-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white/10 rounded-lg p-4 relative" style={{ height: '300px' }}>
-                <Image
-                  src="/images/ashleyshreds.png"
-                  alt="Ashley Shreds"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  className="rounded-lg shadow-lg"
-                />
-              </div>
-              <div className="bg-white/10 rounded-lg p-4 relative" style={{ height: '300px' }}>
-                <Image
-                  src="/images/wintergetaway.png"
-                  alt="Winter Getaway"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  className="rounded-lg shadow-lg"
-                />
-              </div>
-            </div>
-          </div>
-        )}
+{/* Images Section - Will show when unlocked */}
+{isUnlocked && (
+  <div className="mt-6 p-6 bg-white/20 rounded-lg backdrop-blur-sm">
+    {/* Introduction Text */}
+    <div className="text-center mb-8">
+      <h2 className="text-2xl font-bold text-white mb-4">
+        🎉 Congratulations on Solving All Puzzles! 🎉
+      </h2>
+      <p className="text-xl text-[#ffd700] mb-4">
+        You've unlocked your special Christmas surprise...
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* First Image with Context */}
+      <div className="space-y-4">
+        <div className="bg-white/10 p-4 rounded-lg">
+          <h3 className="text-xl font-bold text-white mb-2">Your Progression Adventure!</h3>
+          <p className="text-[#ffd700] mb-4">
+            Enjoy a one on one session with your certified Woodward Instructor! They are ready to help you meet your goals from intro to park up to medium line jumps, rails, boxes, flat spins and halfpipe.
+          </p>
+          <ul className="text-white list-disc list-inside mb-4">
+            <li>Optional bring a friend (or drew) add on</li>
+          </ul>
+        </div>
+        <div className="bg-white/10 rounded-lg p-4 relative" style={{ height: '300px' }}>
+          <Image
+            src="/images/ashleyshreds.png"
+            alt="Ashley Shreds"
+            fill
+            style={{ objectFit: 'contain' }}
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Second Image with Context */}
+      <div className="space-y-4">
+        <div className="bg-white/10 p-4 rounded-lg">
+          <h3 className="text-xl font-bold text-white mb-2">🎄 Your Winter Getaway Package</h3>
+          <p className="text-[#ffd700] mb-4">
+            A magical winter weekend at Telluride Mountain Resort:
+          </p>
+          <ul className="text-white list-disc list-inside mb-4">
+            <li>Days of riding at the legendary Telluride Ski Resort!!</li>
+            <li>Vibey accomodations (dog friendly options)</li>
+            <li>Hot Chocolate by the Fireplace</li>
+          </ul>
+        </div>
+        <div className="bg-white/10 rounded-lg p-4 relative" style={{ height: '300px' }}>
+          <Image
+            src="/images/wintergetaway.png"
+            alt="Winter Getaway"
+            fill
+            style={{ objectFit: 'contain' }}
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Bottom Message */}
+    <div className="text-center mt-8 bg-white/10 p-4 rounded-lg">
+      <p className="text-xl text-white">
+        🎁 Merry Christmas! Pack your bags for an unforgettable winter adventure! 🏔️
+      </p>
+      <p className="text-[#ffd700] mt-2">
+        Your winter getaway awaits at Snowshoe Mountain Resort
+      </p>
+    </div>
+  </div>
+)}
+
       </div>
     </Layout>
   );
